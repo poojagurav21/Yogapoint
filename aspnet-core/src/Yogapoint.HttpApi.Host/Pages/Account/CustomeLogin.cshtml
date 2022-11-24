@@ -1,0 +1,28 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bootstrap
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bundling
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.Account.Localization
+@using Volo.Abp.Account.Settings
+@using Volo.Abp.Settings
+@model Yogapoint.Pages.Account.CustomeLoginModel
+@inject IHtmlLocalizer<AccountResource> L
+@inject Volo.Abp.Settings.ISettingProvider SettingProvider
+@{
+}
+<head>
+    <link rel="stylesheet" href="../Pages/Account/Login.css" type="text/css" />
+</head>
+<body>
+    <div class="card rounded-3 shadow">
+        <div class="card-body abp-background p-5">
+            <div class="row">
+                <div class="col-6">
+                    <h4>@L["Sign In"]</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
