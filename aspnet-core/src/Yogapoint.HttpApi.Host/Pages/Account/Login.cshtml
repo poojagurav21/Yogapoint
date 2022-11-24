@@ -1,0 +1,137 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bootstrap
+@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bundling
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.Account.Localization
+@using Volo.Abp.Account.Settings
+@using Volo.Abp.Settings
+
+@model Yogapoint.Pages.Account.CustomLoginModel
+
+@inject IHtmlLocalizer<AccountResource> L
+@inject Volo.Abp.Settings.ISettingProvider SettingProvider
+
+<head>
+    <link rel="stylesheet" href="../Pages/Account/Login.css" type="text/css" />
+</head>
+
+<body>
+    <div class="card rounded-3 shadow">
+        <div class="card-body abp-background p-5">
+            <div class="row">
+                <div class="col-6">
+                    @*<div class="card text-center mt-3 shadow-sm rounded">*@
+                    @*<div class="card-body abp-background p-5">*@
+
+                    <h4 id="font">@L["Sign In"]</h4>
+                    <h6 id="account">Please sign in or sign up for an account</h6>
+
+                    @if (Model.EnableLocalLogin)
+                    {
+                        <form method="post" class="mt-4 text-left">
+                            <input asp-for="ReturnUrl" />
+                            <input asp-for="ReturnUrlHash" />
+                            <div id="ep" style=" margin-top: -18px;">
+                                <div class="form-group">
+                                    <label id="label">Email Address <span class="text-danger">*</span></label>
+                                    <input asp-for="LoginInput.UserNameOrEmailAddress" id="in" class="form-control text-muted" placeholder="Enter Email Address" required />
+                                    <span asp-validation-for="LoginInput.UserNameOrEmailAddress" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label id="label">Password <span class="text-danger">*</span></label>
+                                    <input asp-for="LoginInput.Password" id="in" class="form-control text-muted" placeholder="Enter Password" required />
+                                    <span asp-validation-for="LoginInput.Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <abp-row style="margin:4px; font-size: smaller; margin-left: -14px; margin-top: 3px; ">
+                                <abp-column>
+                                    <abp-input asp-for="LoginInput.RememberMe" class="mb-4" style="font-size: smaller; " id="rem" />
+                                </abp-column>
+                                <abp-column class="text-right">
+                                    <a href="@Url.Page("./ForgotPassword", new {returnUrl = Model.ReturnUrl, returnUrlHash = Model.ReturnUrlHash})" id="pass">@L["ForgotPassword"]</a>
+                                </abp-column>
+                            </abp-row>
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="submit" name="Action" value="Login" id="bt1" class="btn rounded">@L["SIGN IN"]</button>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    @if (await SettingProvider.IsTrueAsync(AccountSettingNames.IsSelfRegistrationEnabled))
+                                    {
+                                        <strong>
+                                            @*@L["AreYouANewUser"]*@
+                                            <a class="btn" href="@Url.Page("./Register", new {returnUrl = Model.ReturnUrl, returnUrlHash = Model.ReturnUrlHash})" id="register" style=" border: 1px solid darkgray; width: 370px; height: 38px; margin-top: -13px;" role="button">@L["SIGN UP"]</a>
+                                            @*<a href="@Url.Page("./Register", new {returnUrl = Model.ReturnUrl, returnUrlHash = Model.ReturnUrlHash})" id="register" class="text-decoration-none">@L["SIGN UP"]</a>*@
+                                        </strong>
+                                    }
+                                    @*<abp-button name="Action" value="Login" id="bt2" class="btn border">@L["SIGN UP"]</abp-button>*@
+                                </div>
+                            </div>
+
+                            @if (Model.ShowCancelButton)
+                            {
+                                <abp-button type="submit" button-type="Secondary" formnovalidate="formnovalidate" name="Action" value="Cancel" class="btn-block btn-lg mt-3">@L["Cancel"]</abp-button>
+                            }
+                        </form>
+
+                    }
+                    @if (Model.VisibleExternalProviders.Any())
+                    {
+                        <div class="mt-2">
+                            <h5 id="or">@L["OrLoginWith"]</h5>
+                        </div>
+
+                        <form asp-page="./Login" asp-page-handler="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" asp-route-returnUrlHash="@Model.ReturnUrlHash" method="post">
+                            <input asp-for="ReturnUrl" />
+                            <input asp-for="ReturnUrlHash" />
+                            @foreach (var provider in Model.VisibleExternalProviders)
+                            {
+                                @*<button type="submit" class="btn btn-primary m-1" name="provider" value="@provider.AuthenticationScheme" title="@L["GivenTenantIsNotAvailable", provider.DisplayName]">@provider.DisplayName</button>*@
+                            }
+                            <div class="row" style="margin-left: 59px;">
+                                <div class="col-md-2">
+                                    @*  <a href="default.asp">
+                                <img src="smiley.gif" alt="HTML tutorial" style="width:42px;height:42px;">
+                                </a>*@
+                                    <button class="btn" value="Google" title="Google" name="provider" style="background-color:white;border:none"><i style='font-size:24px;color:#F25022' class='fab'>&#xf1a0;</i></button>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button class="btn" value="Facebook" title="Facebook" name="provider" style="background-color:white;border:none"><i style='font-size:24px;color:#1778F2' class='fab'>&#xf09a;</i></button>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button class="btn" value="LinkedIn" title="LinkedIn" name="provider" style="background-color:white;border:none"><i style='font-size:24px;color:#0072b1' class='fab'>&#xf08c;</i></button>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button class="btn" value="Microsoft" title="Microsoft" name="provider" style="background-color:white;border:none"><i style='font-size:24px;color:#F25022' class='fab'>&#xf3ca;</i></button>
+                                </div>
+                            </div>
+                        </form>
+
+                    }
+                    <div class="row">
+                        <span id="agree">By continuing I agree to <a href="@Url.Page("./TermsOfService", new {returnUrl = Model.ReturnUrl, returnUrlHash = Model.ReturnUrlHash})" id="term">@L["Terms of Service"]</a></span>
+                    </div>
+                    @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+                    {
+                        <div class="alert alert-warning">
+                            <strong>@L["InvalidLoginRequest"]</strong>
+                            @L["ThereAreNoLoginSchemesConfiguredForThisClient"]
+                        </div>
+                    }
+                </div>
+                <div class="col-6">
+                    <img class="logo" src="/images/logo/leptonx/Login_Page_1.png" alt="ABP logo">
+                    <img src="/images/logo/leptonx/Logo_YogaPoint.png" id="l2">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
