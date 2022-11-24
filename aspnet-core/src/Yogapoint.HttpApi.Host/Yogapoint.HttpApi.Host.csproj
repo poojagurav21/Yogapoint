@@ -36,8 +36,4 @@
     <None Remove="Logs\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Account\" />
-  </ItemGroup>
-
 </Project>
