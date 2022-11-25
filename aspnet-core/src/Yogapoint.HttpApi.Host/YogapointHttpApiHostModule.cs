@@ -70,6 +70,45 @@ public class YogapointHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+        context.Services.AddAuthentication()
+        .AddFacebook(facebook =>
+        {
+            facebook.AppId = configuration.GetSection("FacebookAuthentication:AppId").Value;
+            facebook.AppSecret = configuration.GetSection("FacebookAuthentication:AppSecret").Value;
+            //facebook.Scope.Add("email");
+            //facebook.Scope.Add("public_profile");
+        });
+        context.Services.AddAuthentication()
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+            });
+        context.Services.AddAuthentication()
+            .AddMicrosoftAccount(options =>
+            {
+                options.ClientId = configuration["MicrosoftAuthentication:ClientId"];
+                options.ClientSecret = configuration["MicrosoftAuthentication:ClientSecret"];
+            });
+        //context.Services.AddAuthentication()
+        //    .AddLinkedIn(option =>
+        //    {
+        //        option.ClientId = configuration.GetSection("LinkedInAuthentication:ClientId").Value;
+        //        option.ClientSecret = configuration.GetSection("LinkedInAuthentication:ClientSecret").Value;
+        //        //option.Scope.Add("email");
+        //        //option.Scope.Add("public_profile");
+        //    });
+        context.Services.AddAuthentication()
+           .AddLinkedIn(option =>
+           {
+
+
+
+               option.ClientId = "77albzwkbzo0u7";
+               option.ClientSecret = "qsPaDyKAY4tIr3lr";
+               option.Scope.Remove("code");
+               option.SaveTokens = true;
+           });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
