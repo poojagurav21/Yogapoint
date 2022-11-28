@@ -71,10 +71,10 @@ public class YogapointHttpApiHostModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
         context.Services.AddAuthentication()
-        .AddFacebook(facebook =>
+        .AddFacebook(facebookOptions =>
         {
-            facebook.AppId = configuration.GetSection("FacebookAuthentication:AppId").Value;
-            facebook.AppSecret = configuration.GetSection("FacebookAuthentication:AppSecret").Value;
+            facebookOptions.AppId = configuration.GetSection("FacebookAuthentication:AppId").Value;
+            facebookOptions.AppSecret = configuration.GetSection("FacebookAuthentication:AppSecret").Value;
             //facebook.Scope.Add("email");
             //facebook.Scope.Add("public_profile");
         });
@@ -85,10 +85,10 @@ public class YogapointHttpApiHostModule : AbpModule
                 googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
             });
         context.Services.AddAuthentication()
-            .AddMicrosoftAccount(options =>
+            .AddMicrosoftAccount(microsoftOptions =>
             {
-                options.ClientId = configuration["MicrosoftAuthentication:ClientId"];
-                options.ClientSecret = configuration["MicrosoftAuthentication:ClientSecret"];
+                microsoftOptions.ClientId = configuration["MicrosoftAuthentication:ClientId"];
+                microsoftOptions.ClientSecret = configuration["MicrosoftAuthentication:ClientSecret"];
             });
         //context.Services.AddAuthentication()
         //    .AddLinkedIn(option =>
@@ -99,18 +99,15 @@ public class YogapointHttpApiHostModule : AbpModule
         //        //option.Scope.Add("public_profile");
         //    });
         context.Services.AddAuthentication()
-           .AddLinkedIn(option =>
+           .AddLinkedIn(linkedInOption =>
            {
-
-
-
-               option.ClientId = "77albzwkbzo0u7";
-               option.ClientSecret = "qsPaDyKAY4tIr3lr";
-               option.Scope.Remove("code");
-               option.SaveTokens = true;
+               linkedInOption.ClientId = "77albzwkbzo0u7";
+               linkedInOption.ClientSecret = "qsPaDyKAY4tIr3lr";
+               linkedInOption.Scope.Remove("code");
+               linkedInOption.SaveTokens = true;
            });
     }
-
+ 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
